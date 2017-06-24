@@ -2,13 +2,13 @@ import numpy as np
 import pandas as pd
 from numpy import genfromtxt
 from numpy import ravel
-import pylab as pl
-from skimage import transform
+#import pylab as pl
+#from skimage import transform
 import h5py
-from sklearn import cross_validation
-import uuid
-import random
-from skimage import io, exposure, img_as_uint, img_as_float
+#from sklearn import cross_validation
+#import uuid
+#import random
+#from skimage import io, exposure, img_as_uint, img_as_float
 from numpy import (array, dot, arccos)
 from numpy.linalg import norm
 
@@ -53,7 +53,7 @@ certainty = certainty.reshape((-1,30))
 
 y = y / 96
 
-print 'Y shape', y.shape
+print ('Y shape', y.shape)
 
 # Extracting Images
 
@@ -71,9 +71,9 @@ X = X.astype(np.float32)
 X = X/255 
 X = X.reshape(-1,1,96,96)
 
-print 'X:', X.shape
+#print ('X:', X.shape)
 
-print 'Shape', 'Labels', X.shape, y.shape
+print ('Shape', 'Labels', X.shape, y.shape)
 
 #X_train, X_test, y_train, y_test = cross_validation.train_test_split(X,labels, test_size=0.30)
 
@@ -85,7 +85,7 @@ X_train = X[1600:]
 y_train = y[1600:]
 certainty_train = certainty[1600:] 
 
-print 'Train, Test shapes (X,y):', X_train.shape, y_train.shape, X_test.shape, y_test.shape
+print ('Train, Test shapes (X,y):', X_train.shape, y_train.shape, X_test.shape, y_test.shape)
 
 # Train data
 f = h5py.File("facialkp-train.hd5", "w")
@@ -95,11 +95,15 @@ f.create_dataset("certainty", data=certainty_train,  compression="gzip", compres
 f.close()
 
 #Test data
-
 f = h5py.File("facialkp-test.hd5", "w")
 f.create_dataset("data", data=X_test,  compression="gzip", compression_opts=4)
 f.create_dataset("label", data=y_test,  compression="gzip", compression_opts=4)
 f.create_dataset("certainty", data=certainty_test,  compression="gzip", compression_opts=4)
 f.close()
 
-
+# Full train data
+f = h5py.File("facialkp-full-train.hd5", "w")
+f.create_dataset("data", data=X,  compression="gzip", compression_opts=4)
+f.create_dataset("label", data=y,  compression="gzip", compression_opts=4)
+f.create_dataset("certainty", data=certainty,  compression="gzip", compression_opts=4)
+f.close()
