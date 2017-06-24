@@ -4,6 +4,7 @@ layers {
   name: "fkp"
   top: "data"
   top: "label"
+  top: "certainty"
   type: HDF5_DATA
   hdf5_data_param {
    source: "train.txt"
@@ -18,6 +19,7 @@ layers {
   type: HDF5_DATA
   top: "data"
   top: "label"
+  top: "certainty"
   hdf5_data_param {
     source: "test.txt"
     batch_size: 100
@@ -33,7 +35,7 @@ layers {
   top: "conv1"
   convolution_param {
     num_output: 32
-    kernel_size: 11
+    kernel_size: 3
     stride: 2
    
     bias_filler {
@@ -70,7 +72,7 @@ layers {
   convolution_param {
     num_output: 64
     pad: 2
-    kernel_size: 7
+    kernel_size: 2
     group: 2
    
     bias_filler {
@@ -100,27 +102,14 @@ layers {
 }
 
 layers {
-  name: "norm2"
-  type: LRN
-  bottom: "pool2"
-  top: "norm2"
-  lrn_param {
-    norm_region: WITHIN_CHANNEL
-    local_size: 3
-    alpha: 5e-05
-    beta: 0.75
-  }
-}
-
-layers {
   name: "conv3"
   type: CONVOLUTION
   bottom: "norm2"
   top: "conv3"
   convolution_param {
-    num_output: 32
+    num_output: 128
     pad: 1
-    kernel_size: 5
+    kernel_size: 2
     
     bias_filler {
       type: "constant"
@@ -137,81 +126,12 @@ layers {
 }
 
 layers {
-  name: "conv4"
-  type: CONVOLUTION
-  bottom: "conv3"
-  top: "conv4"
-  convolution_param {
-    num_output: 64
-    pad: 1
-    kernel_size: 5
-    
-    bias_filler {
-      type: "constant"
-      value: 0.1
-    }
-  }
-}
-
-layers {
-  name: "relu4"
-  type: RELU
-  bottom: "conv4"
-  top: "conv4"
-}
-
-layers {
-  name: "conv5"
-  type: CONVOLUTION
-  bottom: "conv4"
-  top: "conv5"
-  convolution_param {
-    num_output: 32
-    pad: 1
-    kernel_size: 5
-    
-    bias_filler {
-      type: "constant"
-      value: 0.1
-    }
-  }
-}
-
-layers {
-  name: "relu5"
-  type: RELU
-  bottom: "conv5"
-  top: "conv5"
-}
-
-layers {
-  name: "pool5"
-  type: POOLING
-  bottom: "conv5"
-  top: "pool5"
-  pooling_param {
-    pool: MAX
-    kernel_size: 4
-    stride: 2
-  }
-}
-
-layers {
-  name: "drop0"
-  type: DROPOUT
-  bottom: "pool5"
-  top: "pool5"
-  dropout_param {
-    dropout_ratio: 0.5
-  }
-}
-layers {
   name: "ip1"
   type: INNER_PRODUCT
-  bottom: "pool5"
+  bottom: "relu3"
   top: "ip1"
   inner_product_param {
-    num_output: 100
+    num_output: 500
     
     bias_filler {
       type: "constant"
@@ -225,16 +145,6 @@ layers {
   type: RELU
   bottom: "ip1"
   top: "ip1"
-}
-
-layers {
-  name: "drop1"
-  type: DROPOUT
-  bottom: "ip1"
-  top: "ip1"
-  dropout_param {
-    dropout_ratio: 0.5
-  }
 }
 
 layers {
@@ -243,7 +153,7 @@ layers {
   bottom: "ip1"
   top: "ip2"
   inner_product_param {
-    num_output: 30
+    num_output: 200
     
     bias_filler {
       type: "constant"
@@ -260,10 +170,26 @@ layers {
 }
 
 layers {
+  name: "ip3"
+  type: INNER_PRODUCT
+  bottom: "ip2"
+  top: "ip3"
+  inner_product_param {
+    num_output: 30
+    
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+
+layers {
   name: "loss"
   type: EUCLIDEAN_LOSS
-  bottom: "ip2"
+  bottom: "ip3"
   bottom: "label"
+  bottom: "certainty"
   top: "loss"
 }
 
