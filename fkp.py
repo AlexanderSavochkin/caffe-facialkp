@@ -2,13 +2,7 @@ import numpy as np
 import pandas as pd
 from numpy import genfromtxt
 from numpy import ravel
-#import pylab as pl
-#from skimage import transform
 import h5py
-#from sklearn import cross_validation
-#import uuid
-#import random
-#from skimage import io, exposure, img_as_uint, img_as_float
 from numpy import (array, dot, arccos)
 from numpy.linalg import norm
 
@@ -107,3 +101,52 @@ f.create_dataset("data", data=X,  compression="gzip", compression_opts=4)
 f.create_dataset("label", data=y,  compression="gzip", compression_opts=4)
 f.create_dataset("certainty", data=certainty,  compression="gzip", compression_opts=4)
 f.close()
+
+def flip_labels_lr(labels):
+  (left_eye_center_x,left_eye_center_y, \
+  right_eye_center_x,right_eye_center_y, \
+  left_eye_inner_corner_x,left_eye_inner_corner_y, \
+  left_eye_outer_corner_x,left_eye_outer_corner_y, \
+  right_eye_inner_corner_x,right_eye_inner_corner_y, \
+  right_eye_outer_corner_x,right_eye_outer_corner_y, \
+  left_eyebrow_inner_end_x,left_eyebrow_inner_end_y, \
+  left_eyebrow_outer_end_x,left_eyebrow_outer_end_y, \
+  right_eyebrow_inner_end_x,right_eyebrow_inner_end_y, \
+  right_eyebrow_outer_end_x,right_eyebrow_outer_end_y, \
+  nose_tip_x,nose_tip_y, \
+  mouth_left_corner_x,mouth_left_corner_y, \
+  mouth_right_corner_x,mouth_right_corner_y, \
+  mouth_center_top_lip_x,mouth_center_top_lip_y, \
+  mouth_center_bottom_lip_x,mouth_center_bottom_lip_y) = Y[0,:]
+
+  left_eye_center_x, left_eye_center_y = (1.0 - right_eye_center_x), right_eye_center_y
+  right_eye_center_x,right_eye_center_y = (1.0 - left_eye_center_x), left_eye_center_y
+  left_eye_inner_corner_x,left_eye_inner_corner_y = (1.0 - right_eye_inner_corner_x),right_eye_inner_corner_y
+  left_eye_outer_corner_x,left_eye_outer_corner_y = (1.0 - right_eye_outer_corner_x),right_eye_outer_corner_y
+  right_eye_inner_corner_x,right_eye_inner_corner_y = (1.0 - left_eye_inner_corner_x),left_eye_inner_corner_y
+  right_eye_outer_corner_x,right_eye_outer_corner_y = (1.0 - left_eye_outer_corner_x),left_eye_outer_corner_y
+  left_eyebrow_inner_end_x,left_eyebrow_inner_end_y = (1.0 - right_eyebrow_inner_end_x),right_eyebrow_inner_end_y
+  left_eyebrow_outer_end_x,left_eyebrow_outer_end_y = (1.0 - right_eyebrow_outer_end_x),right_eyebrow_outer_end_y
+  right_eyebrow_inner_end_x,right_eyebrow_inner_end_y = (1.0 - left_eyebrow_inner_end_x),left_eyebrow_inner_end_y
+  right_eyebrow_outer_end_x,right_eyebrow_outer_end_y = (1.0 - left_eyebrow_outer_end_x),left_eyebrow_outer_end_y
+  nose_tip_x,nose_tip_y = (1.0 - nose_tip_x),nose_tip_y
+  mouth_left_corner_x,mouth_left_corner_y = (1.0 - mouth_right_corner_x),mouth_right_corner_y
+  mouth_right_corner_x,mouth_right_corner_y = (1.0 - mouth_left_corner_x),mouth_left_corner_y
+  mouth_center_top_lip_x,mouth_center_top_lip_y = (1.0 - mouth_center_top_lip_x),mouth_center_top_lip_y
+  mouth_center_bottom_lip_x,mouth_center_bottom_lip_y = (1.0 - mouth_center_bottom_lip_x),mouth_center_bottom_lip_y
+
+  return [left_eye_center_x,left_eye_center_y, \
+    right_eye_center_x,right_eye_center_y, \
+    left_eye_inner_corner_x,left_eye_inner_corner_y, \
+    left_eye_outer_corner_x,left_eye_outer_corner_y, \
+    right_eye_inner_corner_x,right_eye_inner_corner_y, \
+    right_eye_outer_corner_x,right_eye_outer_corner_y, \
+    left_eyebrow_inner_end_x,left_eyebrow_inner_end_y, \
+    left_eyebrow_outer_end_x,left_eyebrow_outer_end_y, \
+    right_eyebrow_inner_end_x,right_eyebrow_inner_end_y, \
+    right_eyebrow_outer_end_x,right_eyebrow_outer_end_y, \
+    nose_tip_x,nose_tip_y, \
+    mouth_left_corner_x,mouth_left_corner_y, \
+    mouth_right_corner_x,mouth_right_corner_y, \
+    mouth_center_top_lip_x,mouth_center_top_lip_y, \
+    mouth_center_bottom_lip_x,mouth_center_bottom_lip_y]
