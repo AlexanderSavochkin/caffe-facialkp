@@ -117,36 +117,60 @@ def flip_labels_lr(labels):
   mouth_left_corner_x,mouth_left_corner_y, \
   mouth_right_corner_x,mouth_right_corner_y, \
   mouth_center_top_lip_x,mouth_center_top_lip_y, \
-  mouth_center_bottom_lip_x,mouth_center_bottom_lip_y) = Y[0,:]
+  mouth_center_bottom_lip_x,mouth_center_bottom_lip_y) = labels
 
-  left_eye_center_x, left_eye_center_y = (1.0 - right_eye_center_x), right_eye_center_y
-  right_eye_center_x,right_eye_center_y = (1.0 - left_eye_center_x), left_eye_center_y
-  left_eye_inner_corner_x,left_eye_inner_corner_y = (1.0 - right_eye_inner_corner_x),right_eye_inner_corner_y
-  left_eye_outer_corner_x,left_eye_outer_corner_y = (1.0 - right_eye_outer_corner_x),right_eye_outer_corner_y
-  right_eye_inner_corner_x,right_eye_inner_corner_y = (1.0 - left_eye_inner_corner_x),left_eye_inner_corner_y
-  right_eye_outer_corner_x,right_eye_outer_corner_y = (1.0 - left_eye_outer_corner_x),left_eye_outer_corner_y
-  left_eyebrow_inner_end_x,left_eyebrow_inner_end_y = (1.0 - right_eyebrow_inner_end_x),right_eyebrow_inner_end_y
-  left_eyebrow_outer_end_x,left_eyebrow_outer_end_y = (1.0 - right_eyebrow_outer_end_x),right_eyebrow_outer_end_y
-  right_eyebrow_inner_end_x,right_eyebrow_inner_end_y = (1.0 - left_eyebrow_inner_end_x),left_eyebrow_inner_end_y
-  right_eyebrow_outer_end_x,right_eyebrow_outer_end_y = (1.0 - left_eyebrow_outer_end_x),left_eyebrow_outer_end_y
-  nose_tip_x,nose_tip_y = (1.0 - nose_tip_x),nose_tip_y
-  mouth_left_corner_x,mouth_left_corner_y = (1.0 - mouth_right_corner_x),mouth_right_corner_y
-  mouth_right_corner_x,mouth_right_corner_y = (1.0 - mouth_left_corner_x),mouth_left_corner_y
-  mouth_center_top_lip_x,mouth_center_top_lip_y = (1.0 - mouth_center_top_lip_x),mouth_center_top_lip_y
-  mouth_center_bottom_lip_x,mouth_center_bottom_lip_y = (1.0 - mouth_center_bottom_lip_x),mouth_center_bottom_lip_y
+  left_eye_center_x_fl, left_eye_center_y_fl = (1.0 - right_eye_center_x), right_eye_center_y
+  right_eye_center_x_fl,right_eye_center_y_fl = (1.0 - left_eye_center_x), left_eye_center_y
+  left_eye_inner_corner_x_fl,left_eye_inner_corner_y_fl = (1.0 - right_eye_inner_corner_x),right_eye_inner_corner_y
+  left_eye_outer_corner_x_fl,left_eye_outer_corner_y_fl = (1.0 - right_eye_outer_corner_x),right_eye_outer_corner_y
+  right_eye_inner_corner_x_fl,right_eye_inner_corner_y_fl = (1.0 - left_eye_inner_corner_x),left_eye_inner_corner_y
+  right_eye_outer_corner_x_fl,right_eye_outer_corner_y_fl = (1.0 - left_eye_outer_corner_x),left_eye_outer_corner_y
+  left_eyebrow_inner_end_x_fl,left_eyebrow_inner_end_y_fl = (1.0 - right_eyebrow_inner_end_x),right_eyebrow_inner_end_y
+  left_eyebrow_outer_end_x_fl,left_eyebrow_outer_end_y_fl = (1.0 - right_eyebrow_outer_end_x),right_eyebrow_outer_end_y
+  right_eyebrow_inner_end_x_fl,right_eyebrow_inner_end_y_fl = (1.0 - left_eyebrow_inner_end_x),left_eyebrow_inner_end_y
+  right_eyebrow_outer_end_x_fl,right_eyebrow_outer_end_y_fl = (1.0 - left_eyebrow_outer_end_x),left_eyebrow_outer_end_y
+  nose_tip_x_fl,nose_tip_y_fl = (1.0 - nose_tip_x),nose_tip_y
+  mouth_left_corner_x_fl,mouth_left_corner_y_fl = (1.0 - mouth_right_corner_x),mouth_right_corner_y
+  mouth_right_corner_x_fl,mouth_right_corner_y_fl = (1.0 - mouth_left_corner_x),mouth_left_corner_y
+  mouth_center_top_lip_x_fl,mouth_center_top_lip_y_fl = (1.0 - mouth_center_top_lip_x),mouth_center_top_lip_y
+  mouth_center_bottom_lip_x_fl,mouth_center_bottom_lip_y_fl = (1.0 - mouth_center_bottom_lip_x),mouth_center_bottom_lip_y
 
-  return [left_eye_center_x,left_eye_center_y, \
-    right_eye_center_x,right_eye_center_y, \
-    left_eye_inner_corner_x,left_eye_inner_corner_y, \
-    left_eye_outer_corner_x,left_eye_outer_corner_y, \
-    right_eye_inner_corner_x,right_eye_inner_corner_y, \
-    right_eye_outer_corner_x,right_eye_outer_corner_y, \
-    left_eyebrow_inner_end_x,left_eyebrow_inner_end_y, \
-    left_eyebrow_outer_end_x,left_eyebrow_outer_end_y, \
-    right_eyebrow_inner_end_x,right_eyebrow_inner_end_y, \
-    right_eyebrow_outer_end_x,right_eyebrow_outer_end_y, \
-    nose_tip_x,nose_tip_y, \
-    mouth_left_corner_x,mouth_left_corner_y, \
-    mouth_right_corner_x,mouth_right_corner_y, \
-    mouth_center_top_lip_x,mouth_center_top_lip_y, \
-    mouth_center_bottom_lip_x,mouth_center_bottom_lip_y]
+  return np.array([left_eye_center_x_fl,left_eye_center_y_fl, \
+    right_eye_center_x_fl,right_eye_center_y_fl, \
+    left_eye_inner_corner_x_fl,left_eye_inner_corner_y_fl, \
+    left_eye_outer_corner_x_fl,left_eye_outer_corner_y_fl, \
+    right_eye_inner_corner_x_fl,right_eye_inner_corner_y_fl, \
+    right_eye_outer_corner_x_fl,right_eye_outer_corner_y_fl, \
+    left_eyebrow_inner_end_x_fl,left_eyebrow_inner_end_y_fl, \
+    left_eyebrow_outer_end_x_fl,left_eyebrow_outer_end_y_fl, \
+    right_eyebrow_inner_end_x_fl,right_eyebrow_inner_end_y_fl, \
+    right_eyebrow_outer_end_x_fl,right_eyebrow_outer_end_y_fl, \
+    nose_tip_x_fl,nose_tip_y_fl, \
+    mouth_left_corner_x_fl,mouth_left_corner_y_fl, \
+    mouth_right_corner_x_fl,mouth_right_corner_y_fl, \
+    mouth_center_top_lip_x_fl,mouth_center_top_lip_y_fl, \
+    mouth_center_bottom_lip_x_fl,mouth_center_bottom_lip_y_fl])
+
+Xflipped = X.copy()
+Yflipped = y.copy()
+certainty_flipped = certainty.copy()
+for i in range(X.shape[0]):
+  Xflipped[i,0,:,:] = np.fliplr(Xflipped[i,0,:,:])
+  Yflipped[i,:] = flip_labels_lr(Yflipped[i,:])
+  certainty_flipped[i,:] = flip_labels_lr(certainty_flipped[i,:])
+
+f = h5py.File("facialkp-flipped-train.hd5", "w")
+f.create_dataset("data", data=Xflipped,  compression="gzip", compression_opts=4)
+f.create_dataset("label", data=Yflipped,  compression="gzip", compression_opts=4)
+f.create_dataset("certainty", data=certainty_flipped,  compression="gzip", compression_opts=4)
+f.close()
+
+Xextended = np.vstack((X,Xflipped))
+Yextended = np.vstack((y,Yflipped))
+Cextended = np.vstack((certainty,certainty_flipped))
+
+f = h5py.File("facialkp-extended-train.hd5", "w")
+f.create_dataset("data", data=Xextended,  compression="gzip", compression_opts=4)
+f.create_dataset("label", data=Yextended,  compression="gzip", compression_opts=4)
+f.create_dataset("certainty", data=Cextended,  compression="gzip", compression_opts=4)
+f.close()
