@@ -104,7 +104,7 @@ layers {
 layers {
   name: "conv3"
   type: CONVOLUTION
-  bottom: "norm2"
+  bottom: "pool2"
   top: "conv3"
   convolution_param {
     num_output: 128
@@ -128,7 +128,7 @@ layers {
 layers {
   name: "ip1"
   type: INNER_PRODUCT
-  bottom: "relu3"
+  bottom: "conv3"
   top: "ip1"
   inner_product_param {
     num_output: 500
@@ -186,7 +186,7 @@ layers {
 
 layers {
   name: "loss"
-  type: EUCLIDEAN_LOSS
+  type: WEIGHTED_EUCLIDEAN_LOSS
   bottom: "ip3"
   bottom: "label"
   bottom: "certainty"
