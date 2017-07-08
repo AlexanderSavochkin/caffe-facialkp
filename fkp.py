@@ -69,6 +69,25 @@ X = X.reshape(-1,1,96,96)
 
 print ('Shape', 'Labels', X.shape, y.shape)
 
+
+dfp['Image'] = dfp['Image'].apply(lambda im: np.fromstring(im, sep=' ') )
+Xp = np.vstack (dfp['Image'].values) 
+
+Xp = Xp.reshape(-1,96,96)
+for i in range(len(Xp)):
+       Xp[i, :, :] = image_histogram_equalization(Xp[i,:,:])[0]
+
+
+Xp = Xp.astype(np.float32)
+Xp = Xp/255 
+Xp = Xp.reshape(-1,1,96,96)
+
+#print ('X:', X.shape)
+
+print ('Shape of predict', Xp.shape)
+
+
+
 #X_train, X_test, y_train, y_test = cross_validation.train_test_split(X,labels, test_size=0.30)
 
 X_test = X[:1600]
@@ -100,6 +119,11 @@ f = h5py.File("facialkp-full-train.hd5", "w")
 f.create_dataset("data", data=X,  compression="gzip", compression_opts=4)
 f.create_dataset("label", data=y,  compression="gzip", compression_opts=4)
 f.create_dataset("certainty", data=certainty,  compression="gzip", compression_opts=4)
+f.close()
+
+# Predict data
+f = h5py.File("facialkp-unlabeled.hd5", "w")
+f.create_dataset("data", data=Xp,  compression="gzip", compression_opts=4)
 f.close()
 
 def flip_labels_lr(labels):
