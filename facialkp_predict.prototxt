@@ -1,28 +1,41 @@
-name: "FKPred"
+ame: "FKPReg"
 
+layers {
+  name: "fkp"
+  top: "data"
+  top: "label"
+  top: "certainty"
+  type: "HDF5Data"
+  hdf5_data_param {
+   source: "train.txt"
+   batch_size: 64
+  }
+    include: { phase: TRAIN }
+ 
+}
 
 layers {
   name: "data"
-  type: MEMORY_DATA
+  type: "HDF5Data"
   top: "data"
   top: "label"
-  memory_data_param {
-    batch_size: 64 #batch size, so how many prediction youu want to do at once. Best is "1", but higher number get better performance
-    channels: 1
-    height: 96
-    width: 96 #number of input
-
+  top: "certainty"
+  hdf5_data_param {
+    source: "test.txt"
+    batch_size: 100
+   
   }
+  include: { phase: TEST }
 }
 
 layers {
   name: "conv1"
-  type: CONVOLUTION
+  type: "Convolution"
   bottom: "data"
   top: "conv1"
   convolution_param {
     num_output: 32
-    kernel_size: 11
+    kernel_size: 3
     stride: 2
    
     bias_filler {
@@ -34,14 +47,14 @@ layers {
 
 layers {
   name: "relu2"
-  type: RELU
+  type: "ReLU"
   bottom: "conv1"
   top: "conv1"
 }
 
 layers {
   name: "pool1"
-  type: POOLING
+  type: "Pooling"
   bottom: "conv1"
   top: "pool1"
   pooling_param {
@@ -53,13 +66,13 @@ layers {
 
 layers {
   name: "conv2"
-  type: CONVOLUTION
+  type: "Convolution"
   bottom: "pool1"
   top: "conv2"
   convolution_param {
     num_output: 64
     pad: 2
-    kernel_size: 7
+    kernel_size: 2
     group: 2
    
     bias_filler {
@@ -71,14 +84,14 @@ layers {
 
 layers {
   name: "relu2"
-  type: RELU
+  type: "ReLU"
   bottom: "conv2"
   top: "conv2"
 }
 
 layers {
   name: "pool2"
-  type: POOLING
+  type: "Pooling"
   bottom: "conv2"
   top: "pool2"
   pooling_param {
@@ -89,27 +102,14 @@ layers {
 }
 
 layers {
-  name: "norm2"
-  type: LRN
-  bottom: "pool2"
-  top: "norm2"
-  lrn_param {
-    norm_region: WITHIN_CHANNEL
-    local_size: 3
-    alpha: 5e-05
-    beta: 0.75
-  }
-}
-
-layers {
   name: "conv3"
-  type: CONVOLUTION
-  bottom: "norm2"
+  type: "Convolution"
+  bottom: "pool2"
   top: "conv3"
   convolution_param {
-    num_output: 32
+    num_output: 128
     pad: 1
-    kernel_size: 5
+    kernel_size: 2
     
     bias_filler {
       type: "constant"
@@ -120,87 +120,18 @@ layers {
 
 layers {
   name: "relu3"
-  type: RELU
+  type: "ReLU"
   bottom: "conv3"
   top: "conv3"
 }
 
 layers {
-  name: "conv4"
-  type: CONVOLUTION
-  bottom: "conv3"
-  top: "conv4"
-  convolution_param {
-    num_output: 64
-    pad: 1
-    kernel_size: 5
-    
-    bias_filler {
-      type: "constant"
-      value: 0.1
-    }
-  }
-}
-
-layers {
-  name: "relu4"
-  type: RELU
-  bottom: "conv4"
-  top: "conv4"
-}
-
-layers {
-  name: "conv5"
-  type: CONVOLUTION
-  bottom: "conv4"
-  top: "conv5"
-  convolution_param {
-    num_output: 32
-    pad: 1
-    kernel_size: 5
-    
-    bias_filler {
-      type: "constant"
-      value: 0.1
-    }
-  }
-}
-
-layers {
-  name: "relu5"
-  type: RELU
-  bottom: "conv5"
-  top: "conv5"
-}
-
-layers {
-  name: "pool5"
-  type: POOLING
-  bottom: "conv5"
-  top: "pool5"
-  pooling_param {
-    pool: MAX
-    kernel_size: 4
-    stride: 2
-  }
-}
-
-layers {
-  name: "drop0"
-  type: DROPOUT
-  bottom: "pool5"
-  top: "pool5"
-  dropout_param {
-    dropout_ratio: 0.5
-  }
-}
-layers {
   name: "ip1"
-  type: INNER_PRODUCT
-  bottom: "pool5"
+  type: "InnerProduct"
+  bottom: "conv3"
   top: "ip1"
   inner_product_param {
-    num_output: 100
+    num_output: 500
     
     bias_filler {
       type: "constant"
@@ -211,26 +142,38 @@ layers {
 
 layers {
   name: "relu4"
-  type: RELU
+  type: "ReLU"
   bottom: "ip1"
   top: "ip1"
-}
-
-layers {
-  name: "drop1"
-  type: DROPOUT
-  bottom: "ip1"
-  top: "ip1"
-  dropout_param {
-    dropout_ratio: 0.5
-  }
 }
 
 layers {
   name: "ip2"
-  type: INNER_PRODUCT
+  type: "InnerProduct"
   bottom: "ip1"
   top: "ip2"
+  inner_product_param {
+    num_output: 200
+    
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+
+layers {
+  name: "relu22"
+  type: "ReLU"
+  bottom: "ip2"
+  top: "ip2"
+}
+
+layers {
+  name: "ip3"
+  type: "InnerProduct"
+  bottom: "ip2"
+  top: "ip3"
   inner_product_param {
     num_output: 30
     
@@ -242,9 +185,11 @@ layers {
 }
 
 layers {
-  name: "relu22"
-  type: RELU
-  bottom: "ip2"
-  top: "ip2"
+  name: "loss"
+  type: "WeightedEuclideanLoss"
+  bottom: "ip3"
+  bottom: "label"
+  bottom: "certainty"
+  top: "loss"
 }
 
