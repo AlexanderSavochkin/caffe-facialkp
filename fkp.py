@@ -6,6 +6,8 @@ import h5py
 from numpy import (array, dot, arccos)
 from numpy.linalg import norm
 
+nr=3000
+
 df = pd.read_csv('training.csv',header=0)
 dfp = pd.read_csv('test.csv',header=0)
 
@@ -26,20 +28,28 @@ def image_histogram_equalization(image, number_bins=256):
     return image_equalized.reshape(image.shape), cdf
 
 def certainty(row, name):
-    return 0.001 if np.isnan(row[name]) else 1.0
+    return 0.00 if np.isnan(row[name]) else 1.0
 
 y = df.drop(['Image'], axis=1)
+
+print('#1')
+print(y[nr:nr+1])
 
 dict_certainity = {c + '_certainty':y.apply (lambda row: certainty(row, c),axis=1) for c in y.columns}
 certainty = pd.DataFrame(dict_certainity)
 
 y_imp = y.copy()
 for c in y.columns:
-    y_imp.fillna(y_imp[c].median(), inplace=True )
+    y_imp[c].fillna(y_imp[c].median(), inplace=True )
 
 y_imp = y_imp.values 
 y_imp = y_imp.astype(np.float32) 
 y = y_imp.reshape((-1,30))
+
+print('#2')
+print(y[nr:nr+1])
+
+
 
 certainty = certainty.values
 certainty = certainty.astype(np.float32) 
